@@ -30,4 +30,23 @@ dataset = dataset.drop(transformed_features, axis=1)
 
 dataset = pd.concat([pca_value, dataset], axis=1)
 
+print(np.unique(dataset['class'], return_counts=True))
+
+stringToIntMap = {'GALAXY':0, 'QSO':1, 'STAR':2}
+
+dataset['class'] = dataset['class'].apply(
+        lambda class_value : stringToIntMap[class_value])
+
+
+
+
+
+
+
+
+
+
+
+
+
 
