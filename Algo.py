@@ -4,6 +4,7 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
 from sklearn.ensemble import RandomForestClassifier
@@ -34,6 +35,7 @@ dataset = dataset.drop(transformed_features, axis=1)
 
 dataset = pd.concat([pca_value, dataset], axis=1)
 
+print("Labels and their counts")
 print(np.unique(dataset['class'], return_counts=True))
 
 stringToIntMap = {'GALAXY':0, 'QSO':1, 'STAR':2}
@@ -64,10 +66,16 @@ y = dataset['class']
 
 x_train, x_test, y_train, y_test = train_test_split(X, y)
 
+clf = RandomForestClassifier()
 
+clf.fit(x_train, y_train)
 
+y_pred = clf.predict(x_test)
 
+f1_score = f1_score(y_test, y_pred, average='micro')
 
+print("F1 score")
+print(f1_score)
 
 
 
