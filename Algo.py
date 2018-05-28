@@ -8,6 +8,10 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import neural_network
+from sklearn import cluster
+from sklearn import svm
+from sklearn import linear_model
 
 dataset = pd.read_csv("dataset.csv")
 
@@ -19,7 +23,7 @@ dataset = dataset.drop(removed_features, axis=1)
 
 corr = dataset.corr()
 
-sns.heatmap(corr, annot=True)
+#sns.heatmap(corr, annot=True)
 
 transformed_features = ['g', 'r', 'i', 'z']
 
@@ -37,6 +41,7 @@ dataset = pd.concat([pca_value, dataset], axis=1)
 
 print("Labels and their counts")
 print(np.unique(dataset['class'], return_counts=True))
+print("")
 
 stringToIntMap = {'GALAXY':0, 'QSO':1, 'STAR':2}
 
@@ -66,16 +71,56 @@ y = dataset['class']
 
 x_train, x_test, y_train, y_test = train_test_split(X, y)
 
+
+
 clf = RandomForestClassifier()
 
 clf.fit(x_train, y_train)
 
 y_pred = clf.predict(x_test)
 
-f1_score = f1_score(y_test, y_pred, average='micro')
+f1_score_result = f1_score(y_test, y_pred, average='micro')
 
-print("F1 score")
-print(f1_score)
+print("F1 score for Random Forest Classifier")
+print(f1_score_result)
+print("")
+
+'''
+clf = neural_network.MLPClassifier()
+
+clf.fit(x_train, y_train)
+
+y_pred = clf.predict(x_test)
+
+f1_score_result = f1_score(y_test, y_pred, average='micro')
+
+print("F1 score for Neural Network")
+print(f1_score_result)
+print("")
+'''
 
 
+clf = linear_model.LogisticRegression()
 
+clf.fit(x_train, y_train)
+
+y_pred = clf.predict(x_test)
+
+f1_score_result = f1_score(y_test, y_pred, average='micro')
+
+print("F1 score for Logistic Regression")
+print(f1_score_result)
+print("")
+
+
+clf = svm.SVC()
+
+clf.fit(x_train, y_train)
+
+y_pred = clf.predict(x_test)
+
+f1_score_result = f1_score(y_test, y_pred, average='micro')
+
+print("F1 score for SVM")
+print(f1_score_result)
+print("")
