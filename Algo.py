@@ -9,24 +9,30 @@ from sklearn.model_selection import train_test_split
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import neural_network
-from sklearn import cluster
 from sklearn import svm
 from sklearn import linear_model
+from sklearn import tree
 
 dataset = pd.read_csv("dataset.csv")
 
+
+#Irrelevant features
 removed_features = ['objid', 'run', 'rerun', 'fiberid',
                     'camcol', 'specobjid', 'plate', 'mjd',
                     'field']
 
 dataset = dataset.drop(removed_features, axis=1)
 
+
 corr = dataset.corr()
 
-#sns.heatmap(corr, annot=True)
+#Correlations
+sns.heatmap(corr, annot=True)
 
 transformed_features = ['g', 'r', 'i', 'z']
 
+
+#Principal Component Analysis
 pca_input = dataset[transformed_features]
 
 pca = PCA(n_components=1)
@@ -39,14 +45,18 @@ dataset = dataset.drop(transformed_features, axis=1)
 
 dataset = pd.concat([pca_value, dataset], axis=1)
 
+
 print("Labels and their counts")
 print(np.unique(dataset['class'], return_counts=True))
 print("")
 
+
+#Mapping of labels to integers
 stringToIntMap = {'GALAXY':0, 'QSO':1, 'STAR':2}
 
 dataset['class'] = dataset['class'].apply(
         lambda class_value : stringToIntMap[class_value])
+
 
 '''
 plt.subplot(231)
@@ -72,7 +82,7 @@ y = dataset['class']
 x_train, x_test, y_train, y_test = train_test_split(X, y)
 
 
-
+#Algorithms
 clf = RandomForestClassifier()
 
 clf.fit(x_train, y_train)
@@ -85,7 +95,7 @@ print("F1 score for Random Forest Classifier")
 print(f1_score_result)
 print("")
 
-'''
+
 clf = neural_network.MLPClassifier()
 
 clf.fit(x_train, y_train)
@@ -97,7 +107,6 @@ f1_score_result = f1_score(y_test, y_pred, average='micro')
 print("F1 score for Neural Network")
 print(f1_score_result)
 print("")
-'''
 
 
 clf = linear_model.LogisticRegression()
@@ -122,5 +131,18 @@ y_pred = clf.predict(x_test)
 f1_score_result = f1_score(y_test, y_pred, average='micro')
 
 print("F1 score for SVM")
+print(f1_score_result)
+print("")
+
+
+clf = tree.DecisionTreeClassifier()
+
+clf.fit(x_train, y_train)
+
+y_pred = clf.predict(x_test)
+
+f1_score_result = f1_score(y_test, y_pred, average='micro')
+
+print("F1 score for Decision Tree")
 print(f1_score_result)
 print("")
