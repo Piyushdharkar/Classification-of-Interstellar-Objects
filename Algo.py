@@ -4,6 +4,10 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
+from sklearn.model_selection import train_test_split
+
+from sklearn.ensemble import RandomForestClassifier
+
 dataset = pd.read_csv("dataset.csv")
 
 removed_features = ['objid', 'run', 'rerun', 'fiberid',
@@ -14,7 +18,7 @@ dataset = dataset.drop(removed_features, axis=1)
 
 corr = dataset.corr()
 
-#sns.heatmap(corr, annot=True)
+sns.heatmap(corr, annot=True)
 
 transformed_features = ['g', 'r', 'i', 'z']
 
@@ -37,11 +41,28 @@ stringToIntMap = {'GALAXY':0, 'QSO':1, 'STAR':2}
 dataset['class'] = dataset['class'].apply(
         lambda class_value : stringToIntMap[class_value])
 
+'''
+plt.subplot(231)
+plt.bar(dataset['redshift'], dataset['class'], width=0.2)
+plt.xlabel("Red Shift")
+plt.subplot(232)
+plt.bar(dataset['pca_value'], dataset['class'], width=0.2)
+plt.xlabel("pca_value")
+plt.subplot(233)
+plt.bar(dataset['ra'], dataset['class'], width=0.2)
+plt.xlabel("ra")
+plt.subplot(234)
+plt.bar(dataset['dec'], dataset['class'], width=0.2)
+plt.xlabel("dec")
+plt.subplot(235)
+plt.bar(dataset['u'], dataset['class'], width=0.2)
+plt.xlabel("u")
+'''
 
+X = dataset.drop('class', axis=1)
+y = dataset['class']
 
-
-
-
+x_train, x_test, y_train, y_test = train_test_split(X, y)
 
 
 
